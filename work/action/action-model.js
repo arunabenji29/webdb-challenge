@@ -2,7 +2,7 @@ const db = require('../../data/dbConfig.js')
 
 module.exports = {
     getActions,
-    getActionById,
+    getActionsAndContextById,
     addAction,
     update,
     remove
@@ -13,11 +13,30 @@ function getActions(){
     return db('actions');
 }
 
-function getActionById(id){
-    return db('actions')
-    .where({id})
-    .first();
+// function getActionById(id){
+//     return db('actions')
+//     .where({id})
+//     .first();
+// }
+
+function getContexts(id){
+    return db('action-context')
+    .where({'action-context.action_id':id})
+    .join('contexts', 'contexts.id', '=', 'action-context.context_id')
+    .select('contexts.places')
 }
+
+async function getActionsAndContextById(id){
+
+   const action = await db('actions')
+   .where({id})
+    .first();
+
+  const contexts = await getContexts(id)
+
+  return {action,contexts}
+     
+ }
 
 
 function addAction(action){

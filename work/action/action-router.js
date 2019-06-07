@@ -17,7 +17,7 @@ router.get('/', (req,res) => {
 })
 
 router.get('/:id', (req,res) => {
-    Actions.getActionById(req.params.id)
+    Actions.getActionsAndContextById(req.params.id)
     .then(action => {
         if(action)
         {
