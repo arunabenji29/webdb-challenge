@@ -4,8 +4,8 @@ module.exports = {
     getProjects,
     getProjectById,
     addProject,
-    
-    
+    update,
+    remove
 };
 
 function getProjects(){
@@ -33,4 +33,16 @@ async function getProjectById(id){
 function addProject(project){
     return db('projects')
     .insert(project,'id')
+}
+
+function update(id,changes){
+    return db('projects')
+    .where({id})
+    .update(changes)
+}
+
+function remove(id){
+    return db('projects')
+    .where({id})
+    .del()
 }

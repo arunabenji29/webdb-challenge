@@ -4,8 +4,8 @@ module.exports = {
     getActions,
     getActionById,
     addAction,
-    
-    
+    update,
+    remove
 };
 
 function getActions(){
@@ -23,4 +23,16 @@ function getActionById(id){
 function addAction(action){
     return db('actions')
     .insert(action,'id')
+}
+
+function update(id,changes){
+    return db('actions')
+    .where({id})
+    .update(changes)
+}
+
+function remove(id){
+    return db('actions')
+    .where({id})
+    .del()
 }
