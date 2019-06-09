@@ -8,7 +8,7 @@ module.exports = {
     remove
 };
 
-function getActions(){
+function getActions() {
     console.log(db('actions'))
     return db('actions');
 }
@@ -26,32 +26,56 @@ function getContexts(id){
     .select('contexts.places')
 }
 
-async function getActionsAndContextById(id){
+// async function getActionsAndContextById(id){
 
-   const action = await db('actions')
-   .where({id})
-    .first();
+//    const action = await db('actions')
+//    .where({id})
+//     // .first();
 
-  const contexts = await getContexts(id)
+//   const contexts = await getContexts(id)
 
-  return {action,contexts}
-     
- }
+//   return {action,contexts}
 
+//  }
 
-function addAction(action){
+function getActionsAndContextById(id) {
     return db('actions')
-    .insert(action,'id')
+        .where({ id })
+        .first()
+        .then(action => {
+
+            return getContexts(action.id)
+
+    //         return db('action-context')
+    // .where({'action-context.action_id':action.id})
+    // .join('contexts', 'contexts.id', '=', 'action-context.context_id')
+    // .select('contexts.places')
+                .then(context => {
+                    // console.log(action)
+                    if (action) {
+                        console.log('context inside if ',context)
+                        action.context = context
+                        console.log('action inside if ',action)
+                        return action
+                    }
+                })
+        })
 }
 
-function update(id,changes){
+
+function addAction(action) {
     return db('actions')
-    .where({id})
-    .update(changes)
+        .insert(action, 'id')
 }
 
-function remove(id){
+function update(id, changes) {
     return db('actions')
-    .where({id})
-    .del()
+        .where({ id })
+        .update(changes)
+}
+
+function remove(id) {
+    return db('actions')
+        .where({ id })
+        .del()
 }

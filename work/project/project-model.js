@@ -8,41 +8,62 @@ module.exports = {
     remove
 };
 
-function getProjects(){
+function getProjects() {
     console.log(db('projects'))
     return db('projects');
 }
 
-function getActions(id){
+function getActions(id) {
     return db('actions')
-    .where({'actions.project_id':id})
+        .where({ 'actions.project_id': id })
 }
 
-async function getProjectById(id){
+// async function getProjectById(id){
 
-   const project = await db('projects')
-    .where({id})
-    .first()
+//    const project = await db('projects')
+//     .where({id})
+//     .first()
 
-    const actions = await getActions(id)
+//     const actions = await getActions(id)
 
-    return {project,actions}
-}
+//     return {project,actions}
+// }
 
-
-function addProject(project){
+function getProjectById(id) {
     return db('projects')
-    .insert(project,'id')
+        .where({ id })
+        .first()
+        .then(project => {
+
+            // return getActions(project.id)
+            return db('actions')
+                .where({ 'actions.project_id': project.id })
+                .then(action => {
+                    // console.log(action)
+                    if (action) {
+                        console.log('action inside if ',action)
+                        project.action = action
+                        console.log('project inside if ',project)
+                        return project
+                    }
+                })
+        })
 }
 
-function update(id,changes){
+
+function addProject(project) {
     return db('projects')
-    .where({id})
-    .update(changes)
+        .insert(project, 'id')
 }
 
-function remove(id){
+function update(id, changes) {
     return db('projects')
-    .where({id})
-    .del()
+        .where({ id })
+        .update(changes)
+}
+
+function remove(id) {
+    return db('projects')
+        .where({ id })
+        .del()
 }
